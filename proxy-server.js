@@ -1,4 +1,4 @@
-// proxy-server.js - 本地代理服务器解决阿里百炼 API CORS 问题
+// proxy-server.js - 本地代理服务器解决 API CORS 问题
 // 使用方法: node proxy-server.js
 
 const http = require('http');
@@ -6,14 +6,15 @@ const https = require('https');
 const url = require('url');
 
 const PORT = 3000;
-const TARGET_HOST = 'dashscope.aliyuncs.com';
+// OpenRouter API
+const TARGET_HOST = 'openrouter.ai';
 
 // 创建代理服务器
 const server = http.createServer((req, res) => {
   // 添加 CORS 头
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, HTTP-Referer, X-Title');
 
   // 处理 OPTIONS 预检请求
   if (req.method === 'OPTIONS') {
@@ -30,8 +31,8 @@ const server = http.createServer((req, res) => {
   }
 
   // 构建目标路径
-  // /api/chat/completions -> /compatible-mode/v1/chat/completions
-  const apiPath = req.url.replace('/api/chat/completions', '/compatible-mode/v1/chat/completions');
+  // /api/chat/completions -> /api/v1/chat/completions
+  const apiPath = req.url.replace('/api/chat/completions', '/api/v1/chat/completions');
 
   // 读取请求体
   let body = '';
@@ -52,14 +53,19 @@ const server = http.createServer((req, res) => {
       headers: {
         'Content-Type': 'application/json',
         'Authorization': authHeader,
+        'HTTP-Referer': 'http://localhost:8080',
+        'X-Title': 'Tavern Chat',
         'Content-Length': Buffer.byteLength(body)
       }
     };
 
-    // 发起 HTTPS 请求到阿里百炼
+    // 发起 HTTPS 请求到 OpenRouter
     const proxyReq = https.request(options, (proxyRes) => {
       // 检查是否为流式响应
-      const isStream = body && JSON.parse(body).stream;
+      let isStream = false;
+      try {
+        isStream = body && JSON.parse(body).stream;
+      } catch (e) {}
 
       if (isStream) {
         // 流式响应 - 直接转发 chunk
@@ -102,6 +108,6 @@ const server = http.createServer((req, res) => {
 // 启动服务器
 server.listen(PORT, () => {
   console.log(`代理服务器已启动: http://localhost:${PORT}`);
-  console.log(`API 代理路径: /api/chat/completions -> https://${TARGET_HOST}/compatible-mode/v1/chat/completions`);
+  console.log(`API 代理路径: /api/chat/completions -> https://${TARGET_HOST}/api/v1/chat/completions`);
   console.log('按 Ctrl+C 停止服务器');
 });

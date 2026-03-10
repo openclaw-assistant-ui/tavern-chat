@@ -4,7 +4,7 @@ const API = {
   // API 配置 - 使用本地代理服务器
   config: {
     defaultBaseUrl: 'http://localhost:3000/api/chat/completions',
-    model: 'glm-5',
+    model: 'deepseek/deepseek-chat',
     apiKey: null,
     baseUrl: null
   },
