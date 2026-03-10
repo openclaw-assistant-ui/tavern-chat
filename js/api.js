@@ -1,9 +1,9 @@
 // api.js - API 调用封装
 
 const API = {
-  // API 配置 - 使用阿里百炼 GLM-5
+  // API 配置 - 使用本地代理服务器
   config: {
-    defaultBaseUrl: 'https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions',
+    defaultBaseUrl: 'http://localhost:3000/api/chat/completions',
     model: 'glm-5',
     apiKey: null,
     baseUrl: null
