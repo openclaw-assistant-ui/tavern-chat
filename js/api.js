@@ -3,18 +3,38 @@
 const API = {
   // API 配置 - 使用阿里百炼 GLM-5
   config: {
-    baseUrl: 'https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions',
+    defaultBaseUrl: 'https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions',
     model: 'glm-5',
-    apiKey: null // 将在运行时从配置或环境获取
+    apiKey: null,
+    baseUrl: null
   },
 
   // 初始化 API
   init() {
-    // 尝试从 localStorage 获取 API Key
+    // 从 localStorage 获取 API Key
     const savedKey = localStorage.getItem('tavern_api_key');
     if (savedKey) {
       this.config.apiKey = savedKey;
     }
+    // 从 localStorage 获取 Base URL
+    const savedBaseUrl = localStorage.getItem('tavern_base_url');
+    this.config.baseUrl = savedBaseUrl || this.config.defaultBaseUrl;
+  },
+
+  // 检查是否有有效配置
+  hasValidConfig() {
+    return !!this.config.apiKey;
+  },
+
+  // 获取当前 Base URL
+  getBaseUrl() {
+    return this.config.baseUrl;
+  },
+
+  // 设置 Base URL
+  setBaseUrl(url) {
+    this.config.baseUrl = url || this.config.defaultBaseUrl;
+    localStorage.setItem('tavern_base_url', this.config.baseUrl);
   },
 
   // 设置 API Key

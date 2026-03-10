@@ -21,18 +21,54 @@ const App = {
     this.checkApiKey();
   },
 
-  // 检查 API Key
+  // 检查 API Key（仅检查，不弹窗）
   checkApiKey() {
-    const apiKey = API.getApiKey();
-    if (!apiKey) {
-      setTimeout(() => {
-        const key = prompt('请输入阿里百炼 API Key：');
-        if (key) {
-          API.setApiKey(key);
-          Utils.showToast('API Key 已保存', 'success');
-        }
-      }, 1000);
+    // 不再自动弹出 prompt，改为用户手动在设置中配置
+  },
+
+  // 显示设置弹窗
+  showSettings() {
+    const modal = document.getElementById('settings-modal');
+    const apiKeyInput = document.getElementById('api-key');
+    const baseUrlInput = document.getElementById('base-url');
+
+    // 填充当前配置
+    apiKeyInput.value = API.getApiKey() || '';
+    baseUrlInput.value = API.getBaseUrl() || API.config.defaultBaseUrl;
+
+    modal.classList.add('show');
+  },
+
+  // 隐藏设置弹窗
+  hideSettings() {
+    const modal = document.getElementById('settings-modal');
+    modal.classList.remove('show');
+  },
+
+  // 保存设置
+  saveSettings() {
+    const apiKey = document.getElementById('api-key').value.trim();
+    const baseUrl = document.getElementById('base-url').value.trim();
+
+    if (apiKey) {
+      API.setApiKey(apiKey);
     }
+    if (baseUrl) {
+      API.setBaseUrl(baseUrl);
+    }
+
+    this.hideSettings();
+    Utils.showToast('设置已保存', 'success');
+  },
+
+  // 检查配置并在无效时提示
+  checkConfigAndPrompt() {
+    if (!API.hasValidConfig()) {
+      Utils.showToast('请先配置 API Key', 'error');
+      this.showSettings();
+      return false;
+    }
+    return true;
   },
 
   // 加载角色
@@ -48,6 +84,19 @@ const App = {
     document.getElementById('back-from-create').addEventListener('click', () => this.showPage('home'));
     document.getElementById('back-from-chat').addEventListener('click', () => this.showPage('home'));
     document.getElementById('cancel-create').addEventListener('click', () => this.showPage('home'));
+
+    // 设置弹窗
+    document.getElementById('settings-btn').addEventListener('click', () => this.showSettings());
+    document.getElementById('close-settings').addEventListener('click', () => this.hideSettings());
+    document.getElementById('cancel-settings').addEventListener('click', () => this.hideSettings());
+    document.getElementById('save-settings').addEventListener('click', () => this.saveSettings());
+
+    // 点击弹窗背景关闭
+    document.getElementById('settings-modal').addEventListener('click', (e) => {
+      if (e.target.id === 'settings-modal') {
+        this.hideSettings();
+      }
+    });
 
     // 搜索
     document.getElementById('search-input').addEventListener('input', Utils.debounce((e) => {
@@ -282,6 +331,9 @@ const App = {
 
   // 生成背景故事
   async generateBackstory() {
+    // 检查配置
+    if (!this.checkConfigAndPrompt()) return;
+
     const name = document.getElementById('char-name').value.trim();
     const gender = document.querySelector('input[name="gender"]:checked')?.value;
     const personality = Array.from(document.querySelectorAll('#personality-select .tag.active'))
@@ -310,6 +362,9 @@ const App = {
 
   // 生成自身描述
   async generateDescription() {
+    // 检查配置
+    if (!this.checkConfigAndPrompt()) return;
+
     const name = document.getElementById('char-name').value.trim();
     const gender = document.querySelector('input[name="gender"]:checked')?.value;
     const personality = Array.from(document.querySelectorAll('#personality-select .tag.active'))
@@ -389,9 +444,12 @@ const App = {
 
   // 发送消息
   async sendMessage() {
+    // 检查配置
+    if (!this.checkConfigAndPrompt()) return;
+
     const input = document.getElementById('message-input');
     const content = input.value.trim();
-    
+
     if (!content) return;
     if (!this.state.currentCharacter) return;
 
