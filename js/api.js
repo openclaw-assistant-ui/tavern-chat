@@ -107,7 +107,7 @@ ${character.description || '暂无'}
           'Authorization': `Bearer ${this.config.apiKey}`,
           // OpenRouter 需要 HTTP Referer 和 可选 X-Title
           'HTTP-Referer': window.location.origin,
-          'X-Title': 'AI 酒馆聊天'
+          'X-Title': 'AI Tavern Chat'
         },
         body: JSON.stringify({
           model: this.config.model,
@@ -177,7 +177,7 @@ ${character.description || '暂无'}
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${this.config.apiKey}`,
         'HTTP-Referer': window.location.origin,
-        'X-Title': 'AI 酒馆聊天'
+        'X-Title': 'AI Tavern Chat'
       },
       body: JSON.stringify({
         model: this.config.model,
@@ -213,7 +213,7 @@ ${character.description || '暂无'}
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${this.config.apiKey}`,
         'HTTP-Referer': window.location.origin,
-        'X-Title': 'AI 酒馆聊天'
+        'X-Title': 'AI Tavern Chat'
       },
       body: JSON.stringify({
         model: this.config.model,
