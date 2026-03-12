@@ -3,9 +3,6 @@
   "version": "1.0.0",
   "description": "AI 酒馆聊天网站",
   "main": "index.html",
-  "scripts": {
-    "start": "node proxy-server.js"
-  },
   "keywords": ["ai", "chat", "tavern"],
   "license": "MIT"
 }

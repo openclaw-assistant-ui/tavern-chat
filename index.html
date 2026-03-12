@@ -12,12 +12,30 @@
     <div id="page-home" class="page active">
       <header>
         <h1>🍺 酒馆聊天</h1>
-        <button id="settings-btn" class="btn-settings" title="设置">⚙️</button>
+        <div class="header-actions">
+          <button id="theme-toggle" class="btn-icon" title="切换主题">🌙</button>
+          <button id="settings-btn" class="btn-settings" title="设置">⚙️</button>
+          <button id="help-btn" class="btn-icon btn-help" title="帮助">?</button>
+        </div>
       </header>
       
       <div class="toolbar">
         <input type="text" id="search-input" placeholder="🔍 搜索角色...">
         <button id="create-btn" class="btn-primary">➕ 创建</button>
+      </div>
+      
+      <!-- Tab 导航 -->
+      <div class="nav-tabs">
+        <button class="tab" data-tab="discover">💡 推荐</button>
+        <button class="tab active" data-tab="home">🏠 我的</button>
+        <button class="tab" data-tab="marketplace">🌐 广场</button>
+      </div>
+      
+      <!-- 来源筛选（仅广场显示） -->
+      <div class="source-filter" style="display: none;">
+        <button class="tag active" data-filter="all">全部</button>
+        <button class="tag" data-filter="official">官方</button>
+        <button class="tag" data-filter="mine">我的</button>
       </div>
       
       <div class="tag-filters" id="tag-filters">
@@ -133,6 +151,46 @@
         <button id="send-message" class="btn-send">➤</button>
       </div>
     </div>
+    
+    <!-- 推荐页 -->
+    <div id="page-discover" class="page">
+      <header>
+        <h1>💡 发现</h1>
+        <button id="skip-agent" class="btn-icon" title="换一个">🔄</button>
+      </header>
+      
+      <div class="discover-container">
+        <!-- 卡片堆叠容器 -->
+        <div class="card-stack" id="card-stack">
+          <!-- 预览卡片（下一张） -->
+          <div class="discover-card preview-card" id="preview-card">
+            <div class="card-avatar">🎭</div>
+            <div class="card-name">下一个角色</div>
+            <div class="card-tags"></div>
+            <div class="card-hint">← 滑动切换 →</div>
+          </div>
+          <!-- 当前卡片 -->
+          <div class="discover-card current-card" id="current-card">
+            <div class="card-avatar">🎭</div>
+            <div class="card-name">加载中...</div>
+            <div class="card-tags"></div>
+            <div class="card-desc"></div>
+            <button class="btn-start-chat" id="start-discover-chat">开始聊天</button>
+          </div>
+        </div>
+        
+        <!-- 滑动提示 -->
+        <div class="swipe-hint">
+          <span>👈 左滑跳过</span>
+          <span>右滑聊天 👉</span>
+        </div>
+      </div>
+    </div>
+    
+    <!-- 页脚 -->
+    <footer class="app-footer">
+      <p>酒馆聊天 v1.0.0 - 2025</p>
+    </footer>
   </div>
 
   <!-- 设置弹窗 -->
@@ -155,6 +213,43 @@
       <div class="modal-footer">
         <button id="cancel-settings" class="btn-secondary">取消</button>
         <button id="save-settings" class="btn-primary">保存</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 帮助弹窗 -->
+  <div id="help-modal" class="modal">
+    <div class="modal-content help-modal-content">
+      <div class="modal-header">
+        <h2>📖 关于酒馆聊天</h2>
+        <button id="close-help" class="btn-close">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="help-section">
+          <h3>🍺 欢迎来到酒馆</h3>
+          <p>这是一个可以与 AI 角色自由聊天的应用。你可以创建自己的角色，或与官方提供的角色互动。</p>
+        </div>
+        <div class="help-section">
+          <h3>🚀 快速开始</h3>
+          <ul>
+            <li><strong>创建角色：</strong>点击右上角「➕ 创建」按钮</li>
+            <li><strong>开始聊天：</strong>点击任意角色卡片</li>
+            <li><strong>模型广场：</strong>切换到「🌐 广场」发现官方角色</li>
+            <li><strong>主题切换：</strong>点击 🌙/☀️ 切换深色/浅色模式</li>
+            <li><strong>API 设置：</strong>点击 ⚙️ 配置你的 OpenAI 兼容 API</li>
+          </ul>
+        </div>
+        <div class="help-section">
+          <h3>💡 提示</h3>
+          <ul>
+            <li>角色的背景故事和性格会影响 AI 的回复风格</li>
+            <li>聊天记录保存在本地，清除浏览器数据会丢失</li>
+            <li>支持 OpenAI 兼容的 API（如 OpenRouter、DeepSeek 等）</li>
+          </ul>
+        </div>
+        <div class="help-footer">
+          <p>版本：1.1.0 | 由 OpenClaw 驱动</p>
+        </div>
       </div>
     </div>
   </div>

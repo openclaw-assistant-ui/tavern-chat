@@ -1,9 +1,9 @@
-// api.js - API 调用封装
+// api.js - API 调用封装 (OpenRouter 直连)
 
 const API = {
-  // API 配置 - 使用本地代理服务器
+  // API 配置 - 直连 OpenRouter
   config: {
-    defaultBaseUrl: 'http://localhost:3000/api/chat/completions',
+    defaultBaseUrl: 'https://openrouter.ai/api/v1/chat/completions',
     model: 'deepseek/deepseek-chat',
     apiKey: null,
     baseUrl: null
@@ -16,9 +16,19 @@ const API = {
     if (savedKey) {
       this.config.apiKey = savedKey;
     }
-    // 从 localStorage 获取 Base URL
+    // 从 localStorage 获取 Base URL (迁移支持：旧版 localhost:3000 自动转换)
     const savedBaseUrl = localStorage.getItem('tavern_base_url');
-    this.config.baseUrl = savedBaseUrl || this.config.defaultBaseUrl;
+    if (savedBaseUrl) {
+      // 如果是旧版代理地址，自动升级为 OpenRouter
+      if (savedBaseUrl.includes('localhost:3000')) {
+        this.config.baseUrl = this.config.defaultBaseUrl;
+        localStorage.setItem('tavern_base_url', this.config.defaultBaseUrl);
+      } else {
+        this.config.baseUrl = savedBaseUrl;
+      }
+    } else {
+      this.config.baseUrl = this.config.defaultBaseUrl;
+    }
   },
 
   // 检查是否有有效配置
@@ -78,7 +88,7 @@ ${character.description || '暂无'}
     }
 
     const systemPrompt = this.buildSystemPrompt(character);
-    
+
     // 构建消息数组（限制最近 20 条）
     const recentMessages = messages.slice(-20);
     const apiMessages = [
@@ -94,7 +104,10 @@ ${character.description || '暂无'}
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${this.config.apiKey}`
+          'Authorization': `Bearer ${this.config.apiKey}`,
+          // OpenRouter 需要 HTTP Referer 和 可选 X-Title
+          'HTTP-Referer': window.location.origin,
+          'X-Title': 'AI 酒馆聊天'
         },
         body: JSON.stringify({
           model: this.config.model,
@@ -162,7 +175,9 @@ ${character.description || '暂无'}
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${this.config.apiKey}`
+        'Authorization': `Bearer ${this.config.apiKey}`,
+        'HTTP-Referer': window.location.origin,
+        'X-Title': 'AI 酒馆聊天'
       },
       body: JSON.stringify({
         model: this.config.model,
@@ -196,7 +211,9 @@ ${character.description || '暂无'}
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${this.config.apiKey}`
+        'Authorization': `Bearer ${this.config.apiKey}`,
+        'HTTP-Referer': window.location.origin,
+        'X-Title': 'AI 酒馆聊天'
       },
       body: JSON.stringify({
         model: this.config.model,

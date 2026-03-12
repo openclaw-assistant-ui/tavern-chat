@@ -6,15 +6,37 @@ const Storage = {
     CHAT_HISTORY: 'tavern_chat_history'
   },
 
-  // 获取所有角色
+  // 获取所有用户角色
   getCharacters() {
     try {
       const data = localStorage.getItem(this.KEYS.CHARACTERS);
-      return data ? JSON.parse(data) : [];
+      let chars = data ? JSON.parse(data) : [];
+      
+      // Backfill missing fields for legacy user characters
+      chars = chars.map(c => ({
+        ...c,
+        source: c.source || 'user',
+        isOfficial: c.isOfficial !== undefined ? c.isOfficial : false,
+        createdBy: c.createdBy || null
+      }));
+      
+      return chars;
     } catch (e) {
       console.error('Failed to get characters:', e);
       return [];
     }
+  },
+
+  // 获取所有官方角色
+  getOfficialCharacters() {
+    return window.OFFICIAL_CHARACTERS || [];
+  },
+
+  // 获取所有角色（官方 + 用户）
+  getAllCharacters() {
+    const user = this.getCharacters();
+    const official = this.getOfficialCharacters();
+    return [...official, ...user];
   },
 
   // 保存所有角色
@@ -67,10 +89,16 @@ const Storage = {
     return true;
   },
 
-  // 获取单个角色
+  // 获取单个角色（支持用户和官方角色）
   getCharacter(id) {
+    // 先从用户角色中查找
     const characters = this.getCharacters();
-    return characters.find(c => c.id === id) || null;
+    let char = characters.find(c => c.id === id);
+    if (char) return char;
+    
+    // 如果没找到，从官方角色中查找
+    const official = this.getOfficialCharacters();
+    return official.find(c => c.id === id) || null;
   },
 
   // 搜索角色

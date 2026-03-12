@@ -1,6 +1,7 @@
 /* 酒馆聊天 - 样式文件 */
 
 :root {
+  /* 暗色主题（默认） */
   --bg-primary: #1a1512;
   --bg-secondary: #2d2521;
   --accent: #d4a574;
@@ -11,6 +12,20 @@
   --ai-msg: #2d2521;
   --danger: #c45c5c;
   --success: #5c8a5c;
+}
+
+/* 亮色主题 */
+[data-theme="light"] {
+  --bg-primary: #f5f0eb;
+  --bg-secondary: #ffffff;
+  --accent: #b8956a;
+  --text-primary: #2d2521;
+  --text-secondary: #6b5d52;
+  --border: #e0d5c8;
+  --user-msg: #d4edda;
+  --ai-msg: #f8f4f0;
+  --danger: #c45c5c;
+  --success: #28a745;
 }
 
 * {
@@ -62,6 +77,12 @@ header h1 {
   font-size: 20px;
   font-weight: 600;
   color: var(--accent);
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .btn-back {
@@ -157,6 +178,71 @@ header h1 {
   border-color: var(--accent);
 }
 
+/* Tab 导航 */
+.nav-tabs {
+  display: flex;
+  gap: 8px;
+  padding: 12px 20px;
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border);
+}
+
+.tab {
+  padding: 8px 16px;
+  background: var(--bg-primary);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text-primary);
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.tab:hover {
+  border-color: var(--accent);
+}
+
+.tab.active {
+  background: var(--accent);
+  color: var(--bg-primary);
+  border-color: var(--accent);
+}
+
+/* 来源筛选 */
+.source-filter {
+  display: flex;
+  gap: 8px;
+  padding: 8px 20px;
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border);
+}
+
+.source-filter .tag {
+  font-size: 12px;
+  padding: 4px 10px;
+}
+
+/* 徽章 */
+.badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  font-size: 11px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  z-index: 1;
+}
+
+.official-badge {
+  background: #ffc107;
+  color: #000;
+}
+
+.mine-badge {
+  background: #28a745;
+  color: #fff;
+}
+
 /* 角色列表 */
 .character-list {
   flex: 1;
@@ -175,6 +261,7 @@ header h1 {
   gap: 16px;
   cursor: pointer;
   transition: all 0.2s;
+  position: relative;
 }
 
 .character-card:hover {
@@ -709,4 +796,216 @@ header h1 {
   justify-content: flex-end;
   padding: 16px 20px;
   border-top: 1px solid var(--border);
+}
+
+/* 帮助按钮 */
+.btn-help {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--bg-primary);
+  font-size: 16px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  min-width: auto;
+}
+
+.btn-help:hover {
+  opacity: 0.8;
+  transform: scale(1.05);
+}
+
+/* 帮助弹窗 */
+.help-modal-content {
+  max-width: 480px;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.help-section {
+  margin-bottom: 20px;
+}
+
+.help-section h3 {
+  font-size: 16px;
+  color: var(--accent);
+  margin-bottom: 10px;
+}
+
+.help-section p {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+.help-section ul {
+  list-style: none;
+  padding: 0;
+}
+
+.help-section li {
+  font-size: 14px;
+  line-height: 1.8;
+  color: var(--text-primary);
+  padding-left: 16px;
+  position: relative;
+}
+
+.help-section li::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+}
+
+.help-footer {
+  text-align: center;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+
+/* 页脚 */
+.app-footer {
+  text-align: center;
+  padding: 16px 20px;
+  color: var(--text-secondary);
+  font-size: 12px;
+  border-top: 1px solid var(--border);
+  background: var(--bg-secondary);
+}
+
+.app-footer p {
+  margin: 0;
+}
+
+/* 推荐页 */
+.discover-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  overflow: hidden;
+}
+
+.card-stack {
+  position: relative;
+  width: 100%;
+  max-width: 320px;
+  height: 400px;
+  perspective: 1000px;
+}
+
+.discover-card {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 30px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  touch-action: pan-y;
+}
+
+.preview-card {
+  transform: scale(0.9) translateY(20px);
+  opacity: 0.5;
+  z-index: 1;
+}
+
+.current-card {
+  z-index: 2;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+
+.current-card.swiping-left {
+  transform: translateX(-100%) rotate(-10deg);
+  opacity: 0;
+}
+
+.current-card.swiping-right {
+  transform: translateX(100%) rotate(10deg);
+  opacity: 0;
+}
+
+.card-avatar {
+  font-size: 64px;
+  margin-bottom: 16px;
+}
+
+.card-name {
+  font-size: 24px;
+  font-weight: bold;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+}
+
+.card-tags {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.card-tags .tag {
+  font-size: 12px;
+  padding: 4px 10px;
+}
+
+.card-desc {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  flex: 1;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+
+.card-hint {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-top: auto;
+}
+
+.btn-start-chat {
+  margin-top: 20px;
+  padding: 12px 32px;
+  background: var(--accent);
+  color: var(--bg-primary);
+  border: none;
+  border-radius: 25px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-start-chat:hover {
+  transform: scale(1.05);
+  opacity: 0.9;
+}
+
+.swipe-hint {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 320px;
+  margin-top: 20px;
+  color: var(--text-secondary);
+  font-size: 13px;
 }
